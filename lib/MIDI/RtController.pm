@@ -123,7 +123,7 @@ sub BUILD {
     my $output_name = $self->output;
     $self->_midi_out->open_port_by_name(qr/\Q$output_name/i);
 
-    $self->_loop->await(_process_midi_events());
+    $self->_loop->await($self->_process_midi_events());
 }
 
 sub send_it ($self, $event) {
