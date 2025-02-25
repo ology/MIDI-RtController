@@ -80,6 +80,11 @@ has _channel => (
     default => sub { IO::Async::Channel->new },
 );
 
+has _midi_out => (
+    is      => 'ro',
+    default => sub { RtMidiOut->new },
+);
+
 =head1 METHODS
 
 =head2 new
@@ -106,10 +111,9 @@ sub BUILD {
     );
     $self->_loop->add($midi_rtn);
 
-    my $midi_out = RtMidiOut->new;
-    $midi_out->open_virtual_port('foo');
+    $self->_midi_out->open_virtual_port('foo');
     my $output_name = $self->output;
-    $midi_out->open_port_by_name(qr/\Q$output_name/i);
+    $self->_midi_out->open_port_by_name(qr/\Q$output_name/i);
 
     $self->_loop->await(_process_midi_events());
 }
