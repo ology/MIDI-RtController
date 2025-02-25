@@ -88,6 +88,11 @@ has _midi_out => (
     default => sub { RtMidiOut->new },
 );
 
+has _filters => (
+    is      => 'rw',
+    default => sub { {} },
+);
+
 =head1 METHODS
 
 =head2 new
@@ -121,30 +126,30 @@ sub BUILD {
     $self->_loop->await(_process_midi_events());
 }
 
-sub send_it ($event) {
-    $midi_out->send_event($event->@*);
+sub send_it ($self, $event) {
+    $self->_midi_out->send_event($event->@*);
 }
 
-sub delay_send ($delay_time, $event) {
-    $loop->add(
+sub delay_send ($self, $delay_time, $event) {
+    $self->_loop->add(
         IO::Async::Timer::Countdown->new(
             delay     => $delay_time,
-            on_expire => sub { send_it($event) }
+            on_expire => sub { $self->send_it($event) }
         )->start
     )
 }
 
-sub _filter_and_forward ($event) {
-    my $event_filters = $filters->{ $event->[0] } // [];
+sub _filter_and_forward ($self, $event) {
+    my $event_filters = $self->_filters->{ $event->[0] } // [];
     for my $filter ($event_filters->@*) {
         return if $filter->($event);
     }
-    send_it($event);
+    $self->send_it($event);
 }
 
-async sub _process_midi_events {
-    while (my $event = await $midi_ch->recv) {
-        _filter_and_forward($event);
+async sub _process_midi_events ($self) {
+    while (my $event = await $self->_channel->recv) {
+        $self->_filter_and_forward($event);
     }
 }
 
