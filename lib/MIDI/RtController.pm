@@ -1,6 +1,8 @@
 package MIDI::RtController;
 
-# ABSTRACT: Moo Module
+# ABSTRACT: Control your MIDI controller
+
+use v5.36;
 
 our $VERSION = '0.0100';
 
@@ -24,7 +26,8 @@ use namespace::clean;
 
 =head1 DESCRIPTION
 
-A C<MIDI::RtController> is a Moo module.
+C<MIDI::RtController> allows you to control your MIDI controller using
+plug-in filters.
 
 =head1 ATTRIBUTES
 
@@ -117,6 +120,34 @@ sub BUILD {
 
     $self->_loop->await(_process_midi_events());
 }
+
+sub send_it ($event) {
+    $midi_out->send_event($event->@*);
+}
+
+sub delay_send ($delay_time, $event) {
+    $loop->add(
+        IO::Async::Timer::Countdown->new(
+            delay     => $delay_time,
+            on_expire => sub { send_it($event) }
+        )->start
+    )
+}
+
+sub _filter_and_forward ($event) {
+    my $event_filters = $filters->{ $event->[0] } // [];
+    for my $filter ($event_filters->@*) {
+        return if $filter->($event);
+    }
+    send_it($event);
+}
+
+async sub _process_midi_events {
+    while (my $event = await $midi_ch->recv) {
+        _filter_and_forward($event);
+    }
+}
+
 
 1;
 __END__
