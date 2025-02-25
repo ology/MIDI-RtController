@@ -1,18 +1,12 @@
 #!/usr/bin/env perl
 
-# PERL_FUTURE_DEBUG=1 perl rtmidi-callback.pl
+# PERL_FUTURE_DEBUG=1 perl eg/tester.pl
 
 use v5.36;
 
-use Data::Dumper::Compact qw(ddc);
-use Future::AsyncAwait;
-use IO::Async::Channel ();
-use IO::Async::Loop ();
-use IO::Async::Routine ();
-use IO::Async::Timer::Countdown ();
+use MIDI::RtController ();
 use List::SomeUtils qw(first_index);
 use List::Util qw(shuffle uniq);
-use MIDI::RtMidi::FFI::Device ();
 use Music::Chord::Note ();
 use Music::Note ();
 use Music::ToRoman ();
@@ -20,22 +14,10 @@ use Music::Scales qw(get_scale_MIDI get_scale_notes);
 use Music::VoiceGen ();
 use Term::TermKey::Async qw(FORMAT_VIM KEYMOD_CTRL);
 
-# for the pedal-tone filter:
-use constant PEDAL => 55; # G below middle C
-# for the pedal-tone, delay and arp filters:
-use constant DELAY_INC => 0.01;
-use constant VELO_INC  => 10; # volume change offset
-# for the modal chord filter:
-use constant NOTE  => 'C';     # key
-use constant SCALE => 'major'; # mode
-# for the offset filter:
-use constant OFFSET => -12; # octave below
-
-my $input_name   = shift || 'tempopad'; # midi controller device
-my $output_name  = shift || 'fluid';    # fluidsynth
 my $filter_names = shift || '';         # chord,delay,pedal,offset
-
 my @filter_names = split /\s*,\s*/, $filter_names;
+
+my $rtc = MIDI::RtController->new;
 
 my %dispatch = (
     chord  => sub { add_filters(\&chord_tone) },
@@ -57,20 +39,6 @@ my $direction  = 1; # offset 0=below, 1=above
 my $scale_name = SCALE;
 
 $dispatch{$_}->() for @filter_names;
-
-my $loop    = IO::Async::Loop->new;
-my $midi_ch = IO::Async::Channel->new;
-
-my $midi_rtn = IO::Async::Routine->new(
-    channels_out => [ $midi_ch ],
-    code => sub {
-        my $midi_in = MIDI::RtMidi::FFI::Device->new(type => 'in');
-        $midi_in->open_port_by_name(qr/\Q$input_name/i);
-        $midi_in->set_callback_decoded(sub { $midi_ch->send($_[2]) });
-        sleep;
-    },
-);
-$loop->add($midi_rtn);
 
 my $tka = Term::TermKey::Async->new(
     term   => \*STDIN,
@@ -100,39 +68,17 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq '#') { $offset += $direction ? 3 : -3 }
         elsif ($pressed eq ')') { $offset += $direction ? 12 : -12 }
         elsif ($pressed eq '(') { $offset = 0 }
-        $loop->loop_stop if $key->type_is_unicode and
-                            $key->utf8 eq 'C' and
-                            $key->modifiers & KEYMOD_CTRL;
+        $rtc->_loop->loop_stop if $key->type_is_unicode and
+                                  $key->utf8 eq 'C' and
+                                  $key->modifiers & KEYMOD_CTRL;
     },
 );
-$loop->add($tka);
-
-my $midi_out = RtMidiOut->new;
-$midi_out->open_virtual_port('foo');
-$midi_out->open_port_by_name(qr/\Q$output_name/i);
-
-$loop->await(_process_midi_events());
+$rtc->_loop->add($tka);
 
 sub clear {
-    $filters    = {};
-    $stash      = {};
-    $arp        = [];
-    $arp_type   = 'up';
-    $delay      = 0.1; # seconds
-    $feedback   = 1;
-    $offset     = OFFSET;
-    $direction  = 1; # offset 0=below, 1=above
-    $scale_name = SCALE;
 }
 
 sub status {
-    print "Arp type: $arp_type\n";
-    print "Delay: $delay\n";
-    print "Feedback: $feedback\n";
-    print "Offset distance: $offset\n";
-    print 'Offset direction: ' . ($direction ? 'up' : 'down') . "\n";
-    print "Scale name: $scale_name\n";
-    print "\n";
 }
 
 sub help {
@@ -144,39 +90,7 @@ sub add_filters ($coderef) {
 }
 
 sub add_filter ($event_type, $action) {
-    push $filters->{$event_type}->@*, $action;
-}
-
-sub stash ($key, $value) {
-    $stash->{$key} = $value if defined $value;
-    $stash->{$key};
-}
-
-sub send_it ($event) {
-    $midi_out->send_event($event->@*);
-}
-
-sub delay_send ($delay_time, $event) {
-    $loop->add(
-        IO::Async::Timer::Countdown->new(
-            delay     => $delay_time,
-            on_expire => sub { send_it($event) }
-        )->start
-    )
-}
-
-sub _filter_and_forward ($event) {
-    my $event_filters = $filters->{ $event->[0] } // [];
-    for my $filter ($event_filters->@*) {
-        return if $filter->($event);
-    }
-    send_it($event);
-}
-
-async sub _process_midi_events {
-    while (my $event = await $midi_ch->recv) {
-        _filter_and_forward($event);
-    }
+    push $rtc->_filters->{$event_type}->@*, $action;
 }
 
 sub chord_notes ($note) {
