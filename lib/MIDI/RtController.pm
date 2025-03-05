@@ -78,7 +78,12 @@ has _loop => (
     default => sub { IO::Async::Loop->new },
 );
 
-has _channel => (
+has _msg_channel => (
+    is      => 'ro',
+    default => sub { IO::Async::Channel->new },
+);
+
+has _midi_channel => (
     is      => 'ro',
     default => sub { IO::Async::Channel->new },
 );
@@ -108,22 +113,27 @@ Create a new C<MIDI::RtController> object.
 sub BUILD {
     my ($self) = @_;
     my $midi_rtn = IO::Async::Routine->new(
-        channels_out => [ $self->_channel ],
-        code => sub {
-            my $midi_in = MIDI::RtMidi::FFI::Device->new(type => 'in');
-            my $input_name = $self->input;
-            $midi_in->open_port_by_name(qr/\Q$input_name/i);
-            $midi_in->set_callback_decoded(sub { $self->_channel->send($_[2]) });
-            sleep;
-        },
+        channels_in  => [ $self->_msg_channel ],
+        channels_out => [ $self->_midi_channel ],
+        module => __PACKAGE__,
+        func => 'rtmidi_loop',
     );
     $self->_loop->add($midi_rtn);
+    my $input_name = $self->input;
+    $self->_msg_channel->send(qr/\Q$input_name/i);
 
     $self->_midi_out->open_virtual_port('foo');
     my $output_name = $self->output;
     $self->_midi_out->open_port_by_name(qr/\Q$output_name/i);
 
     $self->_loop->await($self->_process_midi_events());
+}
+
+sub rtmidi_loop ($msg_ch, $midi_ch) {
+    my $midi_in = MIDI::RtMidi::FFI::Device->new(type => 'in');
+    $midi_in->open_port_by_name( $msg_ch->recv->get );
+    $midi_in->set_callback_decoded(sub { $midi_ch->send($_[2]) });
+    sleep;
 }
 
 sub send_it ($self, $event) {
