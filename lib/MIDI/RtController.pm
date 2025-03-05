@@ -15,7 +15,6 @@ use IO::Async::Loop ();
 use IO::Async::Routine ();
 use IO::Async::Timer::Countdown ();
 use MIDI::RtMidi::FFI::Device ();
-use Term::TermKey::Async qw(FORMAT_VIM KEYMOD_CTRL);
 use namespace::clean;
 
 =head1 SYNOPSIS
