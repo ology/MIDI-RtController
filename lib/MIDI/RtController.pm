@@ -131,7 +131,7 @@ sub BUILD {
 
 sub rtmidi_loop ($msg_ch, $midi_ch) {
     my $midi_in = MIDI::RtMidi::FFI::Device->new(type => 'in');
-    $midi_in->open_port_by_name( $msg_ch->recv );
+    $midi_in->open_port_by_name($msg_ch->recv);
     $midi_in->set_callback_decoded(sub { $midi_ch->send($_[2]) });
     sleep;
 }
