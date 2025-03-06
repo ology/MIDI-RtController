@@ -11,10 +11,10 @@ use constant PEDAL => 55; # G below middle C
 use constant DELAY_INC => 0.01;
 use constant VELO_INC  => 10; # volume change offset
 
-my $input_name  = shift || 'tempopad'; # midi controller device
-my $output_name = shift || 'fluid';    # fluidsynth
-
+my $input_name   = shift || 'tempopad'; # midi controller device
+my $output_name  = shift || 'fluid';    # fluidsynth
 my $filter_names = shift || '';         # chord,delay,pedal,offset
+
 my @filter_names = split /\s*,\s*/, $filter_names;
 
 my $rtc = MIDI::RtController->new(
