@@ -158,7 +158,7 @@ sub _filter_and_forward ($self, $event) {
 }
 
 async sub _process_midi_events ($self) {
-    while (my $event = await $self->_channel->recv) {
+    while (my $event = await $self->_msg_channel->recv) {
         $self->_filter_and_forward($event);
     }
 }
