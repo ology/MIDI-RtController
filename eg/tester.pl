@@ -5,13 +5,6 @@
 use v5.36;
 
 use MIDI::RtController ();
-use List::SomeUtils qw(first_index);
-use List::Util qw(shuffle uniq);
-use Music::Chord::Note ();
-use Music::Note ();
-use Music::ToRoman ();
-use Music::Scales qw(get_scale_MIDI get_scale_notes);
-use Music::VoiceGen ();
 use Term::TermKey::Async qw(FORMAT_VIM KEYMOD_CTRL);
 
 # for the pedal-tone filter:
@@ -19,11 +12,6 @@ use constant PEDAL => 55; # G below middle C
 # for the pedal-tone, delay and arp filters:
 use constant DELAY_INC => 0.01;
 use constant VELO_INC  => 10; # volume change offset
-# for the modal chord filter:
-use constant NOTE  => 'C';     # key
-use constant SCALE => 'major'; # mode
-# for the offset filter:
-use constant OFFSET => -12; # octave below
 
 my $input_name  = shift || 'tempopad'; # midi controller device
 my $output_name = shift || 'fluid';    # fluidsynth
