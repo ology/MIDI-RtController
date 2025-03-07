@@ -10,9 +10,9 @@ use MIDI::RtController ();
 use MIDI::RtMidi::ScorePlayer ();
 use Term::TermKey::Async qw(FORMAT_VIM KEYMOD_CTRL);
 
-use constant CHANNEL => 0;
-use constant DRUMS   => 9;
-use constant PEDAL => 55; # G below middle C
+use constant CHANNEL   => 0;
+use constant DRUMS     => 9;
+use constant PEDAL     => 55; # G below middle C
 use constant DELAY_INC => 0.01;
 use constant VELO_INC  => 10; # volume change offset
 
