@@ -89,3 +89,5 @@ sub delay_tone ($event) {
     }
     return 0;
 }
+
+$rtc->run;
