@@ -18,7 +18,7 @@ use constant VELO_INC  => 10; # volume change offset
 
 my $input_name   = shift || 'tempopad'; # midi controller device
 my $output_name  = shift || 'fluid';    # fluidsynth
-my $filter_names = shift || '';         # chord,delay,pedal,offset
+my $filter_names = shift || '';         # delay,pedal,drums
 
 my @filter_names = split /\s*,\s*/, $filter_names;
 
