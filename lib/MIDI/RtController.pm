@@ -21,7 +21,7 @@ use namespace::clean;
 
   use MIDI::RtController ();
 
-  my $x = MIDI::RtController->new(verbose => 1);
+  my $rtc = MIDI::RtController->new(verbose => 1);
 
 =head1 DESCRIPTION
 
@@ -32,7 +32,7 @@ plug-in filters.
 
 =head2 verbose
 
-  $verbose = $x->verbose;
+  $verbose = $rtc->verbose;
 
 Show progress.
 
@@ -46,7 +46,7 @@ has verbose => (
 
 =head2 input
 
-  $input = $x->input;
+  $input = $rtc->input;
 
 Return the MIDI B<input> port.
 
@@ -59,7 +59,7 @@ has input => (
 
 =head2 output
 
-  $output = $x->output;
+  $output = $rtc->output;
 
 Return the MIDI B<output> port.
 
@@ -101,7 +101,7 @@ has _filters => (
 
 =head2 new
 
-  $x = MIDI::RtController->new(verbose => 1);
+  $rtc = MIDI::RtController->new(verbose => 1);
 
 Create a new C<MIDI::RtController> object.
 
