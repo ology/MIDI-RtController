@@ -70,12 +70,18 @@ has output => (
     required => 1,
 );
 
-# Private attributes
+=head2 loop
 
-has _loop => (
+  $loop = $rtc->loop;
+
+Return the L<IO::Async::Loop>..
+
+has loop => (
     is      => 'ro',
     default => sub { IO::Async::Loop->new },
 );
+
+# Private attributes
 
 has _msg_channel => (
     is      => 'ro',
@@ -118,7 +124,7 @@ sub BUILD {
         module       => __PACKAGE__,
         func         => 'rtmidi_loop',
     );
-    $self->_loop->add($midi_rtn);
+    $self->loop->add($midi_rtn);
     $self->_midi_channel->configure(
         on_recv => sub ($channel, $event) {
             $self->_filter_and_forward($event);
@@ -155,7 +161,7 @@ sub send_it ($self, $event) {
 }
 
 sub delay_send ($self, $delay_time, $event) {
-    $self->_loop->add(
+    $self->loop->add(
         IO::Async::Timer::Countdown->new(
             delay     => $delay_time,
             on_expire => sub { $self->send_it($event) }
@@ -172,7 +178,7 @@ sub _filter_and_forward ($self, $event) {
 }
 
 sub run ($self) {
-    $self->_loop->run;
+    $self->loop->run;
 }
 
 1;
