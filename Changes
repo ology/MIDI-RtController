@@ -1,6 +1,7 @@
 Revision history for MIDI-RtController
 
 {{$NEXT}}
+    - Repair broken POD.
 
 0.0100 2025-03-07 12:48:11
     - Mint with Dist::Zilla.
