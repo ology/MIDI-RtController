@@ -27,10 +27,10 @@ my %dispatch = (
     delay => sub { add_filters(\&delay_tone) },
 );
 
-my $filters    = {};
-my $stash      = {};
-my $delay      = 0.1; # seconds
-my $feedback   = 1;
+my $filters  = {};
+my $stash    = {};
+my $delay    = 0.1; # seconds
+my $feedback = 1;
 
 $dispatch{$_}->() for @filter_names;
 
