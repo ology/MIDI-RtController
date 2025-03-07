@@ -21,7 +21,14 @@ use namespace::clean;
 
   use MIDI::RtController ();
 
-  my $rtc = MIDI::RtController->new(verbose => 1);
+  my $rtc = MIDI::RtController->new(
+    input  => $input_name,
+    output => $output_name,
+  );
+
+  # add stuff to the $rtc->loop
+
+  $rtc->run;
 
 =head1 DESCRIPTION
 
