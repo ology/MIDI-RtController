@@ -8,7 +8,7 @@ our $VERSION = '0.0100';
 
 use Moo;
 use strictures 2;
-use Carp qw(croak);
+use Carp qw(croak carp);
 use Future::AsyncAwait;
 use IO::Async::Channel ();
 use IO::Async::Loop ();
@@ -119,19 +119,33 @@ sub BUILD {
         func         => 'rtmidi_loop',
     );
     $self->_loop->add($midi_rtn);
+    $self->_midi_channel->configure(
+        on_recv => sub ($channel, $event) {
+            $self->_filter_and_forward($event);
+        }
+    );
     my $input_name = $self->input;
-    $self->_msg_channel->send(qr/\Q$input_name/i);
+    $self->_msg_channel->send(\$input_name);
 
     $self->_midi_out->open_virtual_port('foo');
-    my $output_name = $self->output;
-    $self->_midi_out->open_port_by_name(qr/\Q$output_name/i);
+    _open_port($self->_midi_out, $self->output);
+}
 
-    $self->_loop->await($self->_process_midi_events());
+sub _log {
+    return unless $ENV{PERL_FUTURE_DEBUG};
+    carp @_;
+}
+
+sub _open_port($device, $name) {
+    _log("Opening $device->{type} port $name ...");
+    $device->open_port_by_name(qr/\Q$name/i) ||
+            croak "Failed to open port $name";
+    _log("Opened $device->{type} port $name");
 }
 
 sub rtmidi_loop ($msg_ch, $midi_ch) {
     my $midi_in = MIDI::RtMidi::FFI::Device->new(type => 'in');
-    $midi_in->open_port_by_name($msg_ch->recv);
+    _open_port($midi_in, ${ $msg_ch->recv });
     $midi_in->set_callback_decoded(sub { $midi_ch->send($_[2]) });
     sleep;
 }
@@ -157,12 +171,9 @@ sub _filter_and_forward ($self, $event) {
     $self->send_it($event);
 }
 
-async sub _process_midi_events ($self) {
-    while (my $event = await $self->_msg_channel->recv) {
-        $self->_filter_and_forward($event);
-    }
+sub run ($self) {
+    $self->_loop->run;
 }
-
 
 1;
 __END__
