@@ -120,12 +120,6 @@ sub drum_parts ($note) {
 sub drums ($event) {
     my ($ev, $channel, $note, $vel) = $event->@*;
     return 1 unless $ev eq 'note_on';
-    # my @notes = (PEDAL, $note, $note + 7);
-    # my $delay_time = 0;
-    # for my $n (@notes) {
-        # $delay_time += $delay;
-        # delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
-    # }
     my $part = drum_parts($note);
     my $d = MIDI::Drummer::Tiny->new(bpm => 100);
     MIDI::RtMidi::ScorePlayer->new(
