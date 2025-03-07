@@ -22,8 +22,8 @@ use namespace::clean;
   use MIDI::RtController ();
 
   my $rtc = MIDI::RtController->new(
-    input  => $input_name,
-    output => $output_name,
+    input  => 'input-MIDI-device,
+    output => 'output-MIDI-device',
   );
 
   # add stuff to the $rtc->loop
