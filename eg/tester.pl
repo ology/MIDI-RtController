@@ -33,13 +33,13 @@ my %dispatch = (
     drums => sub { add_filters(\&drums) },
 );
 
+$dispatch{$_}->() for @filter_names;
+
 my $channel  = CHANNEL;
 my $filters  = {};
 my $stash    = {};
 my $delay    = 0.1; # seconds
 my $feedback = 1;
-
-$dispatch{$_}->() for @filter_names;
 
 my $tka = Term::TermKey::Async->new(
     term   => \*STDIN,
