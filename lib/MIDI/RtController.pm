@@ -219,8 +219,20 @@ __END__
 
 =head1 SEE ALSO
 
-L<Moo>
+The F<eg/*.pl> program(s)
 
-L<http://somewhere.el.se>
+L<Future::AsyncAwait>
+
+L<IO::Async::Channel>
+
+L<IO::Async::Loop>
+
+L<IO::Async::Routine>
+
+L<IO::Async::Timer::Countdown>
+
+L<MIDI::RtMidi::FFI::Device>
+
+L<Moo>
 
 =cut
