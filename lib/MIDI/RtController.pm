@@ -114,9 +114,9 @@ sub BUILD {
     my $midi_rtn = IO::Async::Routine->new(
         channels_in  => [ $self->_msg_channel ],
         channels_out => [ $self->_midi_channel ],
-        model => 'spawn',
-        module => __PACKAGE__,
-        func => 'rtmidi_loop',
+        model        => 'spawn',
+        module       => __PACKAGE__,
+        func         => 'rtmidi_loop',
     );
     $self->_loop->add($midi_rtn);
     my $input_name = $self->input;
