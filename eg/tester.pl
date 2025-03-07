@@ -22,11 +22,6 @@ my $filter_names = shift || '';         # chord,delay,pedal,offset
 
 my @filter_names = split /\s*,\s*/, $filter_names;
 
-my $rtc = MIDI::RtController->new(
-    input  => $input_name,
-    output => $output_name,
-);
-
 my %dispatch = (
     pedal => sub { add_filters(\&pedal_tone) },
     delay => sub { add_filters(\&delay_tone) },
@@ -40,6 +35,11 @@ my $filters  = {};
 my $stash    = {};
 my $delay    = 0.1; # seconds
 my $feedback = 1;
+
+my $rtc = MIDI::RtController->new(
+    input  => $input_name,
+    output => $output_name,
+);
 
 my $tka = Term::TermKey::Async->new(
     term   => \*STDIN,
