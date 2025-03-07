@@ -45,7 +45,6 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq '>') { $delay += DELAY_INC }
         elsif ($pressed eq 'p') { $dispatch{pedal}->() }
         elsif ($pressed eq 'd') { $dispatch{delay}->() }
-        elsif ($pressed eq 'x') { clear() }
         $rtc->_loop->loop_stop if $key->type_is_unicode and
                                   $key->utf8 eq 'C' and
                                   $key->modifiers & KEYMOD_CTRL;
@@ -70,7 +69,7 @@ sub pedal_tone ($event) {
     my $delay_time = 0;
     for my $n (@notes) {
         $delay_time += $delay;
-        delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
+        $rtc->delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
     }
     return 0;
 }
@@ -84,7 +83,7 @@ sub delay_tone ($event) {
     my $delay_time = 0;
     for my $n (@notes) {
         $delay_time += $delay;
-        delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
+        $rtc->delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
         $vel -= VELO_INC;
     }
     return 0;
