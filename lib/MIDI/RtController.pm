@@ -22,7 +22,7 @@ use namespace::clean;
   use MIDI::RtController ();
 
   my $rtc = MIDI::RtController->new(
-    input  => 'input-MIDI-device,
+    input  => 'input-MIDI-device',
     output => 'output-MIDI-device',
   );
 
