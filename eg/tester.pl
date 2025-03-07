@@ -4,9 +4,13 @@
 
 use v5.36;
 
+use MIDI::Drummer::Tiny ();
 use MIDI::RtController ();
+use MIDI::RtMidi::ScorePlayer ();
 use Term::TermKey::Async qw(FORMAT_VIM KEYMOD_CTRL);
 
+use constant CHANNEL => 0;
+use constant DRUMS   => 9;
 use constant PEDAL => 55; # G below middle C
 use constant DELAY_INC => 0.01;
 use constant VELO_INC  => 10; # volume change offset
@@ -25,8 +29,10 @@ my $rtc = MIDI::RtController->new(
 my %dispatch = (
     pedal => sub { add_filters(\&pedal_tone) },
     delay => sub { add_filters(\&delay_tone) },
+    drums => sub { add_filters(\&drums) },
 );
 
+my $channel  = CHANNEL;
 my $filters  = {};
 my $stash    = {};
 my $delay    = 0.1; # seconds
@@ -41,16 +47,20 @@ my $tka = Term::TermKey::Async->new(
         my $pressed = $self->format_key($key, FORMAT_VIM);
         # say "Got key: $pressed";
         if ($pressed =~ /^\d$/) { $feedback = $pressed }
+        elsif ($pressed eq 'u') { $channel = $channel ? CHANNEL : DRUMS }
         elsif ($pressed eq '<') { $delay -= DELAY_INC unless $delay <= 0 }
         elsif ($pressed eq '>') { $delay += DELAY_INC }
-        elsif ($pressed eq 'p') { $dispatch{pedal}->() }
-        elsif ($pressed eq 'd') { $dispatch{delay}->() }
+        elsif ($pressed eq 'p') { $dispatch{pedal}->() unless grep { 'pedal' eq $_ } @filter_names }
+        elsif ($pressed eq 'd') { $dispatch{delay}->() unless grep { 'delay' eq $_ } @filter_names }
+        elsif ($pressed eq 'y') { $dispatch{drums}->() unless grep { 'drums' eq $_ } @filter_names }
         $rtc->_loop->loop_stop if $key->type_is_unicode and
                                   $key->utf8 eq 'C' and
                                   $key->modifiers & KEYMOD_CTRL;
     },
 );
 $rtc->_loop->add($tka);
+
+$rtc->run;
 
 sub add_filters ($coderef) {
     add_filter($_ => $coderef) for qw(note_on note_off);
@@ -89,4 +99,42 @@ sub delay_tone ($event) {
     return 0;
 }
 
-$rtc->run;
+sub drum_parts ($note) {
+    # warn __PACKAGE__,' L',__LINE__,' ',,"N: $note\n";
+    my $part;
+    if ($note == 99) {
+        $part = sub {
+            my (%args) = @_;
+            $args{drummer}->metronome4;
+        };
+    }
+    else {
+        $part = sub {
+            my (%args) = @_;
+            $args{drummer}->note($args{drummer}->sixtyfourth, $note);
+        };
+    }
+    return $part;
+}
+sub drums ($event) {
+    my ($ev, $channel, $note, $vel) = $event->@*;
+    return 1 unless $ev eq 'note_on';
+    # my @notes = (PEDAL, $note, $note + 7);
+    # my $delay_time = 0;
+    # for my $n (@notes) {
+        # $delay_time += $delay;
+        # delay_send($delay_time, [ $ev, $channel, $n, $vel ]);
+    # }
+    my $part = drum_parts($note);
+    my $d = MIDI::Drummer::Tiny->new(bpm => 100);
+    MIDI::RtMidi::ScorePlayer->new(
+      device   => $rtc->_midi_out,
+      score    => $d->score,
+      common   => { drummer => $d },
+      parts    => [ $part ],
+      sleep    => 0,
+      infinite => 0,
+      dump     => 1,
+    )->play_async->retain;
+    return 1;
+}
