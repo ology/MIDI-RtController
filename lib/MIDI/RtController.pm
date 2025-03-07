@@ -122,7 +122,7 @@ sub BUILD {
         channels_out => [ $self->_midi_channel ],
         model        => 'spawn',
         module       => __PACKAGE__,
-        func         => 'rtmidi_loop',
+        func         => '_rtmidi_loop',
     );
     $self->loop->add($midi_rtn);
     $self->_midi_channel->configure(
@@ -149,16 +149,40 @@ sub _open_port($device, $name) {
     _log("Opened $device->{type} port $name");
 }
 
-sub rtmidi_loop ($msg_ch, $midi_ch) {
+sub _rtmidi_loop ($msg_ch, $midi_ch) {
     my $midi_in = MIDI::RtMidi::FFI::Device->new(type => 'in');
     _open_port($midi_in, ${ $msg_ch->recv });
     $midi_in->set_callback_decoded(sub { $midi_ch->send($_[2]) });
     sleep;
 }
 
+sub _filter_and_forward ($self, $event) {
+    my $event_filters = $self->_filters->{ $event->[0] } // [];
+    for my $filter ($event_filters->@*) {
+        return if $filter->($event);
+    }
+    $self->send_it($event);
+}
+
+=head2 send_it
+
+  $rtc->send_it($event);
+
+Send a MIDI event to the output port.
+
+=cut
+
 sub send_it ($self, $event) {
     $self->_midi_out->send_event($event->@*);
 }
+
+=head2 delay_send
+
+  $rtc->delay_send($delay_time, $event);
+
+Send a MIDI event to the output port when the B<delay_time> expires.
+
+=cut
 
 sub delay_send ($self, $delay_time, $event) {
     $self->loop->add(
@@ -169,13 +193,13 @@ sub delay_send ($self, $delay_time, $event) {
     )
 }
 
-sub _filter_and_forward ($self, $event) {
-    my $event_filters = $self->_filters->{ $event->[0] } // [];
-    for my $filter ($event_filters->@*) {
-        return if $filter->($event);
-    }
-    $self->send_it($event);
-}
+=head2 run
+
+  $rtc->run;
+
+Run the B<loop>!
+
+=cut
 
 sub run ($self) {
     $self->loop->run;
