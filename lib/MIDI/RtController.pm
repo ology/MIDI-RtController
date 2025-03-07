@@ -119,6 +119,11 @@ sub BUILD {
         func         => 'rtmidi_loop',
     );
     $self->_loop->add($midi_rtn);
+    $self->_midi_channel->configure(
+        on_recv => sub ($channel, $event) {
+            $self->_filter_and_forward($event);
+        }
+    );
     my $input_name = $self->input;
     $self->_msg_channel->send(\$input_name);
 
@@ -166,12 +171,9 @@ sub _filter_and_forward ($self, $event) {
     $self->send_it($event);
 }
 
-async sub _process_midi_events ($self) {
-    while (my $event = await $self->_msg_channel->recv) {
-        $self->_filter_and_forward($event);
-    }
+sub run ($self) {
+    $self->_loop->run;
 }
-
 
 1;
 __END__
