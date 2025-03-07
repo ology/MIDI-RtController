@@ -129,7 +129,7 @@ sub drums ($event) {
       parts    => [ $part ],
       sleep    => 0,
       infinite => 0,
-      dump     => 1,
+      # dump     => 1,
     )->play_async->retain;
     return 1;
 }
