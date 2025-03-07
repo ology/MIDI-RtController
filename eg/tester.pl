@@ -4,6 +4,7 @@
 
 use v5.36;
 
+use Future::IO::Impl::IOAsync;
 use MIDI::Drummer::Tiny ();
 use MIDI::RtController ();
 use MIDI::RtMidi::ScorePlayer ();
