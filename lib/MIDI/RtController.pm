@@ -76,6 +76,8 @@ has output => (
 
 Return the L<IO::Async::Loop>..
 
+=cut
+
 has loop => (
     is      => 'ro',
     default => sub { IO::Async::Loop->new },
