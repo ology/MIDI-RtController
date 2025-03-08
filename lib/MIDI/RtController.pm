@@ -26,10 +26,12 @@ use namespace::clean;
     output => 'output-MIDI-device',
   );
 
-  sub filter_notes ($note) {
+  sub filter_notes {
+    my ($note) = @_;
     return $note, $note + 7, $note + 12;
   }
-  sub filter_tone ($event) {
+  sub filter_tone {
+    my ($event) = @_;
     my ($ev, $channel, $note, $vel) = $event->@*;
     my @notes = filter_notes($note);
     $rtc->send_it([ $ev, $channel, $_, $vel ]) for @notes;
