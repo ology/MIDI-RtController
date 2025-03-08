@@ -31,7 +31,6 @@ my %dispatch = (
 $dispatch{$_}->() for @filter_names;
 
 my $channel  = CHANNEL;
-my $filters  = {};
 my $stash    = {};
 my $delay    = 0.1; # seconds
 my $feedback = 1;
@@ -68,7 +67,7 @@ sub add_filters ($coderef) {
 }
 
 sub add_filter ($event_type, $action) {
-    push $rtc->_filters->{$event_type}->@*, $action;
+    push $rtc->filters->{$event_type}->@*, $action;
 }
 
 sub pedal_notes ($note) {
