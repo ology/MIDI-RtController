@@ -31,7 +31,6 @@ my %dispatch = (
 $dispatch{$_}->() for @filter_names;
 
 my $channel  = CHANNEL;
-my $stash    = {};
 my $delay    = 0.1; # seconds
 my $feedback = 1;
 
