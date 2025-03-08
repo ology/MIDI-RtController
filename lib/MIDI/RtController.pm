@@ -238,10 +238,10 @@ sub run ($self) {
 
 =head2 add_filter
 
-  $rtc->add_filter($event_type, $action);
+  $rtc->add_filter($event_type => $action);
 
 Add a filter, defined by the CODE reference B<action>, for an
-B<event_type> like C<note_on> or B<note_off>.
+B<event_type> like C<note_on> or C<note_off>.
 
 =cut
 
