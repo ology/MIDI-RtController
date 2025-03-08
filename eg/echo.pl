@@ -6,8 +6,8 @@ use feature qw/ say /;
 
 use MIDI::RtController;
 
-my $in = $ARGV[0] // 'oxy';
-my $out = $ARGV[1] // 'gs';
+my $in  = $ARGV[0] || 'oxy';
+my $out = $ARGV[1] || 'gs';
 
 my $rtc = MIDI::RtController->new( input => $in, output => $out );
 
