@@ -161,8 +161,8 @@ sub _log {
 
 sub _open_port($device, $name) {
     _log("Opening $device->{type} port $name ...");
-    $device->open_port_by_name(qr/\Q$name/i) ||
-            croak "Failed to open port $name";
+    $device->open_port_by_name(qr/\Q$name/i)
+        || croak "Failed to open port $name";
     _log("Opened $device->{type} port $name");
 }
 
