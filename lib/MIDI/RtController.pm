@@ -38,7 +38,7 @@ use namespace::clean;
     return 0;
   }
 
-  $rtc->add_filter($_ => \&pedal_tone) for qw(note_on note_off);
+  $rtc->add_filter($_ => \&filter_tone) for qw(note_on note_off);
 
   # add other stuff to the $rtc->loop...
 
