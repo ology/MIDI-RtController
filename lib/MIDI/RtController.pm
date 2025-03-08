@@ -222,6 +222,19 @@ sub run ($self) {
     $self->loop->run;
 }
 
+=head2 add_filter
+
+  $rtc->add_filter($event_type, $action);
+
+Add a filter, defined by the CODE reference B<action>, for an
+B<event_type> like C<note_on> or B<note_off>.
+
+=cut
+
+sub add_filter ($self, $event_type, $action) {
+    push $self->filters->{$event_type}->@*, $action;
+}
+
 1;
 __END__
 
