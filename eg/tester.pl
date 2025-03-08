@@ -63,11 +63,7 @@ $rtc->loop->add($tka);
 $rtc->run;
 
 sub add_filters ($coderef) {
-    add_filter($_ => $coderef) for qw(note_on note_off);
-}
-
-sub add_filter ($event_type, $action) {
-    push $rtc->filters->{$event_type}->@*, $action;
+    $rtc->add_filter($_ => $coderef) for qw(note_on note_off);
 }
 
 sub pedal_notes ($note) {
