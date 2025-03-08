@@ -228,7 +228,7 @@ sub delay_send ($self, $delay_time, $event) {
 
   $rtc->run;
 
-Run the B<loop>!
+Run the async B<loop>!
 
 =cut
 
