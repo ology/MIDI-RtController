@@ -252,9 +252,14 @@ sub add_filter ($self, $event_type, $action) {
 1;
 __END__
 
+=head1 THANK YOU
+
+This code would not exist without the help of CPAN's JBARRETT (John
+Barrett AKA fuzzix).
+
 =head1 SEE ALSO
 
-The F<eg/*.pl> program(s)
+The F<eg/*.pl> example program(s)
 
 L<Future::AsyncAwait>
 
