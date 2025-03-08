@@ -2,6 +2,7 @@ Revision history for MIDI-RtController
 
 {{$NEXT}}
     - Improve the documentation.
+    - Improve the eg/echo.pl program.
 
 0.0201 2025-03-07 22:55:41
     - Improve the documentation.
