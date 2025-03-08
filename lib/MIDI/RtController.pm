@@ -26,7 +26,19 @@ use namespace::clean;
     output => 'output-MIDI-device',
   );
 
-  # add stuff to the $rtc->loop
+  sub filter_notes ($note) {
+    return $note, $note + 7, $note + 12;
+  }
+  sub filter_tone ($event) {
+    my ($ev, $channel, $note, $vel) = $event->@*;
+    my @notes = filter_notes($note);
+    $rtc->send_it([ $ev, $channel, $_, $vel ]) for @notes;
+    return 0;
+  }
+
+  $rtc->add_filter($_ => \&pedal_tone) for qw(note_on note_off);
+
+  # add other stuff to the $rtc->loop...
 
   $rtc->run;
 
