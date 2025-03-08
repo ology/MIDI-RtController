@@ -1,6 +1,8 @@
 Revision history for MIDI-RtController
 
 {{$NEXT}}
+
+0.0200 2025-03-07 21:19:45
     - Make the filters list of named coderefs, a public attribute.
     - Add the add_filter() method to hold these.
     - Improve the eg/ programs.
