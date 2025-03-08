@@ -90,6 +90,19 @@ has loop => (
     default => sub { IO::Async::Loop->new },
 );
 
+=head2 filters
+
+  $filters = $rtc->filters;
+
+Return or set the B<filters>.
+
+=cut
+
+has filters => (
+    is      => 'rw',
+    default => sub { {} },
+);
+
 # Private attributes
 
 has _msg_channel => (
@@ -105,11 +118,6 @@ has _midi_channel => (
 has _midi_out => (
     is      => 'ro',
     default => sub { RtMidiOut->new },
-);
-
-has _filters => (
-    is      => 'rw',
-    default => sub { {} },
 );
 
 =head1 METHODS
@@ -166,7 +174,7 @@ sub _rtmidi_loop ($msg_ch, $midi_ch) {
 }
 
 sub _filter_and_forward ($self, $event) {
-    my $event_filters = $self->_filters->{ $event->[0] } // [];
+    my $event_filters = $self->filters->{ $event->[0] } // [];
     for my $filter ($event_filters->@*) {
         return if $filter->($event);
     }
