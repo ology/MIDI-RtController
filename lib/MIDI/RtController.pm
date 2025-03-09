@@ -165,7 +165,7 @@ sub BUILD {
             my $dt = shift @$event;
             $event = shift @$event;
             print "Delta time: $dt, Event: @$event\n" if $self->verbose;
-            $self->_filter_and_forward($event);
+            $self->_filter_and_forward($dt, $event);
         }
     );
 
@@ -197,10 +197,10 @@ sub _rtmidi_loop ($msg_ch, $midi_ch) {
     sleep;
 }
 
-sub _filter_and_forward ($self, $event) {
+sub _filter_and_forward ($self, $dt, $event) {
     my $event_filters = $self->filters->{ $event->[0] } // [];
     for my $filter ($event_filters->@*) {
-        return if $filter->($event);
+        return if $filter->($dt, $event);
     }
     $self->send_it($event);
 }
