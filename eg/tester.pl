@@ -23,9 +23,9 @@ my $filter_names = shift || '';         # delay,pedal,drums
 my @filter_names = split /\s*,\s*/, $filter_names;
 
 my %dispatch = (
-    pedal => sub { add_filters(\&pedal_tone) },
-    delay => sub { add_filters(\&delay_tone) },
-    drums => sub { add_filters(\&drums) },
+    pedal => sub { add_filters(pedal => \&pedal_tone) },
+    delay => sub { add_filters(delay => \&delay_tone) },
+    drums => sub { add_filters(drums => \&drums) },
 );
 
 $dispatch{$_}->() for @filter_names;
@@ -61,8 +61,9 @@ $rtc->loop->add($tka);
 
 $rtc->run;
 
-sub add_filters ($coderef) {
-    $rtc->add_filter($_ => $coderef) for qw(note_on note_off);
+sub add_filters ($name, $coderef) {
+    $rtc->add_filter($name, $_, $coderef)
+        for qw(note_on note_off);
 }
 
 sub pedal_notes ($note) {
