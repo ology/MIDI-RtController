@@ -269,7 +269,7 @@ Barrett AKA fuzzix).
 
 =head1 SEE ALSO
 
-The F<eg/*.pl> example program(s)
+The F<eg/*.pl> example programs
 
 L<Future::AsyncAwait>
 
