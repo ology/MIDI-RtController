@@ -1,6 +1,8 @@
 Revision history for MIDI-RtController
 
 {{$NEXT}}
+    - Fix logging and verbose mode.
+    - Alter the add_filter() signature.
 
 0.0203 2025-03-08 14:12:06
     - Improve the documentation.
