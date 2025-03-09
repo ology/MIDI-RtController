@@ -254,7 +254,8 @@ B<event_type> like C<note_on> or C<note_off>.
 =cut
 
 sub add_filter ($self, $name, $event_type, $action) {
-    _log("Add $name filter for $event_type");
+    _log("Add $name filter for $event_type")
+        if $self->verbose;
     push $self->filters->{$event_type}->@*, $action;
 }
 
