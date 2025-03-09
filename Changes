@@ -1,6 +1,7 @@
 Revision history for MIDI-RtController
 
 {{$NEXT}}
+    - Detect and pass the event delta-time to the filters.
 
 0.0301 2025-03-09 01:47:24
     - Don't log events redundantly.
