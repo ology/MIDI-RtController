@@ -4,7 +4,7 @@ package MIDI::RtController;
 
 use v5.36;
 
-our $VERSION = '0.0300';
+our $VERSION = '0.0301';
 
 use Moo;
 use strictures 2;
