@@ -69,8 +69,8 @@ sub add_filters ($name, $coderef) {
 sub pedal_notes ($note) {
     return PEDAL, $note, $note + 7;
 }
-sub pedal_tone ($event) {
-    my ($ev, $channel, $note, $vel) = $event->@*;
+sub pedal_tone ($dt, $event) {
+    my ($ev, $chan, $note, $vel) = $event->@*;
     my @notes = pedal_notes($note);
     my $delay_time = 0;
     for my $n (@notes) {
@@ -83,8 +83,8 @@ sub pedal_tone ($event) {
 sub delay_notes ($note) {
     return ($note) x $feedback;
 }
-sub delay_tone ($event) {
-    my ($ev, $channel, $note, $vel) = $event->@*;
+sub delay_tone ($dt, $event) {
+    my ($ev, $chan, $note, $vel) = $event->@*;
     my @notes = delay_notes($note);
     my $delay_time = 0;
     for my $n (@notes) {
@@ -112,8 +112,8 @@ sub drum_parts ($note) {
     }
     return $part;
 }
-sub drums ($event) {
-    my ($ev, $channel, $note, $vel) = $event->@*;
+sub drums ($dt, $event) {
+    my ($ev, $chan, $note, $vel) = $event->@*;
     return 1 unless $ev eq 'note_on';
     my $part = drum_parts($note);
     my $d = MIDI::Drummer::Tiny->new(bpm => 100);
