@@ -223,7 +223,6 @@ Send a MIDI B<event> to the output port when the B<delay_time> expires.
 =cut
 
 sub delay_send ($self, $delay_time, $event) {
-    _log("Delay send: $delay_time seconds") if $self->verbose;
     $self->loop->add(
         IO::Async::Timer::Countdown->new(
             delay     => $delay_time,
