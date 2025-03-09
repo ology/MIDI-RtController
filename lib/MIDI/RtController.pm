@@ -165,24 +165,26 @@ sub BUILD {
     $self->_msg_channel->send(\$input_name);
 
     $self->_midi_out->open_virtual_port('foo');
-    _open_port($self->_midi_out, $self->output);
+    $self->_open_port($self->_midi_out, $self->output);
 }
 
 sub _log {
+    my ($self) = @_;
+    return unless $self->verbose;
     return unless $ENV{PERL_FUTURE_DEBUG};
     carp @_;
 }
 
-sub _open_port($device, $name) {
-    _log("Opening $device->{type} port $name ...");
+sub _open_port($self, $device, $name) {
+    $self->_log("Opening $device->{type} port $name ...");
     $device->open_port_by_name(qr/\Q$name/i)
         || croak "Failed to open port $name";
-    _log("Opened $device->{type} port $name");
+    $self->_log("Opened $device->{type} port $name");
 }
 
-sub _rtmidi_loop ($msg_ch, $midi_ch) {
+sub _rtmidi_loop ($self, $msg_ch, $midi_ch) {
     my $midi_in = MIDI::RtMidi::FFI::Device->new(type => 'in');
-    _open_port($midi_in, ${ $msg_ch->recv });
+    $self->_open_port($midi_in, ${ $msg_ch->recv });
     $midi_in->set_callback_decoded(sub { $midi_ch->send($_[2]) });
     sleep;
 }
