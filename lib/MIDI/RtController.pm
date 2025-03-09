@@ -151,7 +151,7 @@ Create a new C<MIDI::RtController> object.
 
 sub BUILD {
     my ($self) = @_;
-    
+
     my $midi_rtn = IO::Async::Routine->new(
         channels_in  => [ $self->_msg_channel ],
         channels_out => [ $self->_midi_channel ],
