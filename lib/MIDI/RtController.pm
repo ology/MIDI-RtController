@@ -8,7 +8,7 @@ our $VERSION = '0.0203';
 
 use Moo;
 use strictures 2;
-use Carp qw(croak carp);
+use Carp qw(croak);
 use Future::AsyncAwait;
 use IO::Async::Channel ();
 use IO::Async::Loop ();
@@ -38,7 +38,8 @@ use namespace::clean;
     return 0;
   }
 
-  $rtc->add_filter($_ => \&filter_tone) for qw(note_on note_off);
+  $rtc->add_filter('filter_tone', $_ => \&filter_tone)
+    for qw(note_on note_off);
 
   # add other stuff to the $rtc->loop...
 
@@ -60,10 +61,12 @@ Show progress.
 =cut
 
 has verbose => (
-    is      => 'ro',
-    isa     => sub { croak "$_[0] is not a boolean" unless $_[0] =~ /^[01]$/ },
-    default => sub { 0 },
+    is => 'lazy',
 );
+sub _build_verbose {
+    my ($self) = @_;
+    return $ENV{PERL_FUTURE_DEBUG} ? 1 : 0;
+}
 
 =head2 input
 
@@ -148,6 +151,7 @@ Create a new C<MIDI::RtController> object.
 
 sub BUILD {
     my ($self) = @_;
+    
     my $midi_rtn = IO::Async::Routine->new(
         channels_in  => [ $self->_msg_channel ],
         channels_out => [ $self->_midi_channel ],
@@ -165,26 +169,26 @@ sub BUILD {
     $self->_msg_channel->send(\$input_name);
 
     $self->_midi_out->open_virtual_port('foo');
-    $self->_open_port($self->_midi_out, $self->output);
+
+    _log(sprintf 'Opening %s port %s...', $self->_midi_out->{type}, $self->output)
+        if $self->verbose;
+    _open_port($self->_midi_out, $self->output);
+    _log(sprintf 'Opened %s port %s', $self->_midi_out->{type}, $self->output)
+        if $self->verbose;
 }
 
 sub _log {
-    my ($self) = @_;
-    return unless $self->verbose;
-    return unless $ENV{PERL_FUTURE_DEBUG};
-    carp @_;
+    print join("\n", @_), "\n";
 }
 
-sub _open_port($self, $device, $name) {
-    $self->_log("Opening $device->{type} port $name ...");
+sub _open_port($device, $name) {
     $device->open_port_by_name(qr/\Q$name/i)
         || croak "Failed to open port $name";
-    $self->_log("Opened $device->{type} port $name");
 }
 
-sub _rtmidi_loop ($self, $msg_ch, $midi_ch) {
+sub _rtmidi_loop ($msg_ch, $midi_ch) {
     my $midi_in = MIDI::RtMidi::FFI::Device->new(type => 'in');
-    $self->_open_port($midi_in, ${ $msg_ch->recv });
+    _open_port($midi_in, ${ $msg_ch->recv });
     $midi_in->set_callback_decoded(sub { $midi_ch->send($_[2]) });
     sleep;
 }
@@ -206,6 +210,7 @@ Send a MIDI B<event> to the output port.
 =cut
 
 sub send_it ($self, $event) {
+    _log("Event: @$event") if $self->verbose;
     $self->_midi_out->send_event($event->@*);
 }
 
@@ -218,6 +223,7 @@ Send a MIDI B<event> to the output port when the B<delay_time> expires.
 =cut
 
 sub delay_send ($self, $delay_time, $event) {
+    _log("Event: @$event, Delay: $delay_time") if $self->verbose;
     $self->loop->add(
         IO::Async::Timer::Countdown->new(
             delay     => $delay_time,
@@ -240,14 +246,15 @@ sub run ($self) {
 
 =head2 add_filter
 
-  $rtc->add_filter($event_type => $action);
+  $rtc->add_filter($name, $event_type, $action);
 
-Add a filter, defined by the CODE reference B<action>, for an
+Add a named filter, defined by the CODE reference B<action>, for an
 B<event_type> like C<note_on> or C<note_off>.
 
 =cut
 
-sub add_filter ($self, $event_type, $action) {
+sub add_filter ($self, $name, $event_type, $action) {
+    _log("Add $name filter for $event_type");
     push $self->filters->{$event_type}->@*, $action;
 }
 
