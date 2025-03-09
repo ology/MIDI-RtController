@@ -165,6 +165,7 @@ sub BUILD {
             $self->_filter_and_forward($event);
         }
     );
+
     my $input_name = $self->input;
     $self->_msg_channel->send(\$input_name);
 
