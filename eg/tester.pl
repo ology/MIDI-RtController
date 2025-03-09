@@ -53,8 +53,8 @@ my $tka = Term::TermKey::Async->new(
         elsif ($pressed eq 'd') { $dispatch{delay}->() unless grep { 'delay' eq $_ } @filter_names }
         elsif ($pressed eq 'y') { $dispatch{drums}->() unless grep { 'drums' eq $_ } @filter_names }
         $rtc->loop->loop_stop if $key->type_is_unicode and
-                                  $key->utf8 eq 'C' and
-                                  $key->modifiers & KEYMOD_CTRL;
+                                 $key->utf8 eq 'C' and
+                                 $key->modifiers & KEYMOD_CTRL;
     },
 );
 $rtc->loop->add($tka);
