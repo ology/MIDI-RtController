@@ -265,7 +265,7 @@ sub add_filter ($self, $name, $event_type, $action) {
     }
     _log("Add $name filter for $event_type")
         if $self->verbose;
-    push $self->filters->{$event_type}->@*, $action;
+    push @{ $self->filters->{$event_type} }, $action;
 }
 
 1;
