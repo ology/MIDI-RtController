@@ -198,7 +198,9 @@ sub _rtmidi_loop ($msg_ch, $midi_ch) {
 }
 
 sub _filter_and_forward ($self, $dt, $event) {
-    my $event_filters = $self->filters->{ $event->[0] } // [];
+    my $event_filters = $self->filters->{ 'all' } // [];
+    push @{ $event_filters }, @{ $self->filters->{ $event->[0] } // [] };
+
     for my $filter ($event_filters->@*) {
         return if $filter->($dt, $event);
     }
