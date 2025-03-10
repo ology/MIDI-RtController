@@ -14,7 +14,7 @@ my $rtc = MIDI::RtController->new( input => $in, output => $out );
 $rtc->add_filter(
     'echo',
     all => sub {
-        say say "dt: $_[0], ev: ", join( ', ', @{ $_[1] } )
+        say "dt: $_[0], ev: ", join( ', ', @{ $_[1] } )
             unless $_[1]->[0] eq 'clock';
         0;
     }
