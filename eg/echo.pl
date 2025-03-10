@@ -12,8 +12,12 @@ my $out = $ARGV[1] || 'gs';
 my $rtc = MIDI::RtController->new( input => $in, output => $out );
 
 $rtc->add_filter(
-    'say',
-    note_on => sub { say "dt: $_[0], ev: ", join( ', ', @{ $_[1] } ) }
+    'echo',
+    all => sub {
+        say "dt: $_[0], ev: ", join( ', ', @{ $_[1] } )
+            unless $_[1]->[0] eq 'clock';
+        0;
+    }
 );
 
 $rtc->run;

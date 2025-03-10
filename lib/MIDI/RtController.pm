@@ -198,7 +198,9 @@ sub _rtmidi_loop ($msg_ch, $midi_ch) {
 }
 
 sub _filter_and_forward ($self, $dt, $event) {
-    my $event_filters = $self->filters->{ $event->[0] } // [];
+    my $event_filters = $self->filters->{ 'all' } // [];
+    push @{ $event_filters }, @{ $self->filters->{ $event->[0] } // [] };
+
     for my $filter ($event_filters->@*) {
         return if $filter->($dt, $event);
     }
@@ -257,6 +259,10 @@ B<event_type> like C<note_on> or C<note_off>.
 =cut
 
 sub add_filter ($self, $name, $event_type, $action) {
+    if ( ref $event_type eq 'ARRAY' ) {
+        $self->add_filter( $name, $_, $action ) for @{ $event_type };
+        return;
+    }
     _log("Add $name filter for $event_type")
         if $self->verbose;
     push $self->filters->{$event_type}->@*, $action;
