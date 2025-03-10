@@ -201,7 +201,7 @@ sub _filter_and_forward ($self, $dt, $event) {
     my $event_filters = $self->filters->{all} // [];
     push @$event_filters, @{ $self->filters->{ $event->[0] } // [] };
 
-    for my $filter ($event_filters->@*) {
+    for my $filter (@{ $event_filters }) {
         return if $filter->($dt, $event);
     }
     $self->send_it($event);
@@ -217,7 +217,7 @@ Send a MIDI B<event> to the output port.
 
 sub send_it ($self, $event) {
     _log("Event: @$event") if $self->verbose;
-    $self->_midi_out->send_event($event->@*);
+    $self->_midi_out->send_event(@{ $event });
 }
 
 =head2 delay_send
