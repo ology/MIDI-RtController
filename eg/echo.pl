@@ -16,6 +16,7 @@ $rtc->add_filter(
     all => sub {
         say say "dt: $_[0], ev: ", join( ', ', @{ $_[1] } )
             unless $_[1]->[0] eq 'clock';
+        0;
     }
 );
 
