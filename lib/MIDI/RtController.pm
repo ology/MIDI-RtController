@@ -164,7 +164,7 @@ sub BUILD {
         on_recv => sub ($channel, $event) {
             my $dt = shift @$event;
             $event = shift @$event;
-            print "Delta time: $dt, Event: @$event\n" if $self->verbose;
+            print "Delta time: $dt\n" if $self->verbose;
             $self->_filter_and_forward($dt, $event);
         }
     );
