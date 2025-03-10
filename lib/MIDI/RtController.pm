@@ -260,7 +260,7 @@ B<event_type> like C<note_on> or C<note_off>.
 
 sub add_filter ($self, $name, $event_type, $action) {
     if ( ref $event_type eq 'ARRAY' ) {
-        $self->add_filter( $_, $event_type, $action ) for @{ $event_type };
+        $self->add_filter( $name, $_, $action ) for @{ $event_type };
         return;
     }
     _log("Add $name filter for $event_type")
