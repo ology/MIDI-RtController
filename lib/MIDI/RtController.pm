@@ -202,7 +202,6 @@ sub _filter_and_forward ($self, $dt, $event) {
     for my $filter ($event_filters->@*) {
         return if $filter->($dt, $event);
     }
-    $self->send_it($event);
 }
 
 =head2 send_it
