@@ -1,6 +1,8 @@
 Revision history for MIDI-RtController
 
 {{$NEXT}}
+
+0.0401 2025-03-10 14:10:53
     - JBARRETT implemented the "all" event type.
     - Clean-up code a bit, too.
     - Updated the eg/ code a bit too.
