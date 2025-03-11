@@ -222,6 +222,30 @@ sub _filter_and_forward ($self, $dt, $event) {
     $self->send_it($event);
 }
 
+=head2 add_filter
+
+  $rtc->add_filter($name, $event_type, $action);
+
+Add a named filter, defined by the CODE reference B<action> for an
+B<event_type> like C<note_on> or C<note_off>. An ARRAY reference
+of event types like: C<[qw(note_on note_off)]> may also be given.
+
+The special event type C<all> may also be used to refer to any
+controller event (e.g. C<note_on>, C<control_change>,
+C<pitch_wheel_change>, etc.).
+
+=cut
+
+sub add_filter ($self, $name, $event_type, $action) {
+    if ( ref $event_type eq 'ARRAY' ) {
+        $self->add_filter( $name, $_, $action ) for @$event_type;
+        return;
+    }
+    _log("Add $name filter for $event_type")
+        if $self->verbose;
+    push @{ $self->filters->{$event_type} }, $action;
+}
+
 =head2 send_it
 
   $rtc->send_it($event);
@@ -263,30 +287,6 @@ Run the asynchronous B<loop>!
 
 sub run ($self) {
     $self->loop->run;
-}
-
-=head2 add_filter
-
-  $rtc->add_filter($name, $event_type, $action);
-
-Add a named filter, defined by the CODE reference B<action> for an
-B<event_type> like C<note_on> or C<note_off>. An ARRAY reference
-of event types like: C<[qw(note_on note_off)]> may also be given.
-
-The special event type C<all> may also be used to refer to any
-controller event (e.g. C<note_on>, C<control_change>,
-C<pitch_wheel_change>, etc.).
-
-=cut
-
-sub add_filter ($self, $name, $event_type, $action) {
-    if ( ref $event_type eq 'ARRAY' ) {
-        $self->add_filter( $name, $_, $action ) for @$event_type;
-        return;
-    }
-    _log("Add $name filter for $event_type")
-        if $self->verbose;
-    push @{ $self->filters->{$event_type} }, $action;
 }
 
 1;
