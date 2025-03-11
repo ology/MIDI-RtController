@@ -16,7 +16,7 @@ $rtc->add_filter(
         my ($dt, $event) = @_;
         print "dt: $dt, ev: ", join( ', ', @$event ), "\n"
             unless $event->[0] eq 'clock';
-        0;
+        return 0;
     }
 );
 
