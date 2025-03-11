@@ -155,7 +155,7 @@ has _midi_out => (
 
 =head2 new
 
-  $rtc = MIDI::RtController->new(verbose => 1);
+  $rtc = MIDI::RtController->new(%attributes);
 
 Create a new C<MIDI::RtController> object.
 
