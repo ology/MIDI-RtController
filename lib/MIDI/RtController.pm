@@ -257,7 +257,8 @@ sub run ($self) {
   $rtc->add_filter($name, $event_type, $action);
 
 Add a named filter, defined by the CODE reference B<action>, for an
-B<event_type> like C<note_on> or C<note_off>.
+B<event_type> like C<note_on> or C<note_off> or an ARRAY reference
+of event types like: C<[qw(note_on note_off)]>.
 
 =cut
 
