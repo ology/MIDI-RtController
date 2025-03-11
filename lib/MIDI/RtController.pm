@@ -275,7 +275,7 @@ of event types like: C<[qw(note_on note_off)]> may also be given.
 
 The special event type C<all> may also be used to refer to any
 controller event (e.g. C<note_on>, C<control_change>,
-C<pitch_wheel_change>, C<CC#>s, etc.).
+C<pitch_wheel_change>, etc.).
 
 =cut
 
