@@ -134,8 +134,6 @@ has filters => (
     default => sub { {} },
 );
 
-# Private attributes
-
 has _msg_channel => (
     is      => 'ro',
     default => sub { IO::Async::Channel->new },
