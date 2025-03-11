@@ -38,13 +38,13 @@ use namespace::clean;
     return 0;
   }
 
-  # capture specific events:
+  # respond to specific events:
   $rtc->add_filter('filter_tone', $_, \&filter_tone)
     for qw(note_on note_off);
   # Or:
   $rtc->add_filter('filter_tone', [qw(note_on note_off)], \&filter_tone);
 
-  # capture all events:
+  # respond to all events:
   $rtc->add_filter(
     'echo',
     all => sub {
