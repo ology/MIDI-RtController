@@ -248,7 +248,9 @@ sub add_filter ($self, $name, $event_type, $action) {
 
   $rtc->send_it($event);
 
-Send a MIDI B<event> to the output port.
+Send a MIDI B<event> to the output port, where the MIDI event is an
+ARRAY reference like, C<['note_on', 0, 40, 107]> or
+C<['control_change', 0, 1, 24]>, etc.
 
 =cut
 
