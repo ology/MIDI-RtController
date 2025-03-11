@@ -193,7 +193,7 @@ sub _open_port($device, $name) {
 sub _rtmidi_loop ($msg_ch, $midi_ch) {
     my $midi_in = MIDI::RtMidi::FFI::Device->new(type => 'in');
     _open_port($midi_in, ${ $msg_ch->recv });
-    $midi_in->set_callback_decoded(sub { $midi_ch->send([ @_[0, 2] ]) });
+    $midi_in->set_callback_decoded(sub { $midi_ch->send([ @_[0, 2] ]) }); # delta-time, event
     sleep;
 }
 
