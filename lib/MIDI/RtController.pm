@@ -239,7 +239,8 @@ sub send_it ($self, $event) {
 
   $rtc->delay_send($delay_time, $event);
 
-Send a MIDI B<event> to the output port when the B<delay_time> expires.
+Send a MIDI B<event> to the output port when the B<delay_time> (in
+seconds) expires.
 
 =cut
 
