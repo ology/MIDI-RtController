@@ -157,7 +157,7 @@ has _midi_out => (
 
   $rtc = MIDI::RtController->new(%attributes);
 
-Create a new C<MIDI::RtController> object.
+Create a new C<MIDI::RtController> object given the above attributes.
 
 =for Pod::Coverage BUILD
 
