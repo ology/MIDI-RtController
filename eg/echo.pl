@@ -2,7 +2,6 @@
 
 use strict;
 use warnings;
-use feature qw/ say /;
 
 use MIDI::RtController;
 
@@ -15,7 +14,7 @@ $rtc->add_filter(
     'echo',
     all => sub {
         my ($dt, $event) = @_;
-        say "dt: $dt, ev: ", join( ', ', @$event )
+        print "dt: $dt, ev: ", join( ', ', @$event ), "\n"
             unless $event->[0] eq 'clock';
         0;
     }
