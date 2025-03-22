@@ -1,6 +1,7 @@
 Revision history for MIDI-RtController
 
 {{$NEXT}}
+    - Make the midi_output port a public attribute.
 
 0.0406 2025-03-21 18:23:06
     - Improve documentation.
