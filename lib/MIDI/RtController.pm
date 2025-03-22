@@ -22,8 +22,8 @@ use namespace::clean;
   use MIDI::RtController ();
 
   my $rtc = MIDI::RtController->new(
-    input  => 'input-MIDI-device',
-    output => 'output-MIDI-device',
+    input  => 'input device 1',
+    output => 'output device',
   );
 
   sub filter_notes {
@@ -55,9 +55,16 @@ use namespace::clean;
     }
   );
 
-  # add other stuff to the $rtc->loop...
-
+  # add stuff to the $rtc->loop...
   $rtc->run;
+
+  # you can also use multiple input sources simultaneously:
+  my $rtc2 = MIDI::RtController->new(
+    loop   => $rtc->loop,
+    input  => 'input device 2',
+    output => 'output device',
+  );
+  $rtc2->run;
 
 =head1 DESCRIPTION
 
