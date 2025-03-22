@@ -188,10 +188,11 @@ sub BUILD {
     $self->loop->add($midi_rtn);
     $self->_midi_channel->configure(
         on_recv => sub ($channel, $event) {
-            my $dt = shift @$event;
-            $event = shift @$event;
-            print "Delta time: $dt\n" if $self->verbose;
-            $self->_filter_and_forward($dt, $event);
+            my $dt   = shift @$event;
+            my $ev   = shift @$event;
+            my $port = shift @$event;
+            print "Delta time: $dt, MIDI port: $port\n" if $self->verbose;
+            $self->_filter_and_forward($port, $dt, $ev);
         }
     );
 
@@ -216,21 +217,24 @@ sub _log {
 sub _open_port($device, $name) {
     $device->open_port_by_name(qr/\Q$name/i)
         || croak "Failed to open port $name";
+    return $name;
 }
 
 sub _rtmidi_loop ($msg_ch, $midi_ch) {
     my $midi_in = MIDI::RtMidi::FFI::Device->new(type => 'in');
-    _open_port($midi_in, ${ $msg_ch->recv });
-    $midi_in->set_callback_decoded(sub { $midi_ch->send([ @_[0, 2] ]) }); # delta-time, event
+    my $name = _open_port($midi_in, ${ $msg_ch->recv });
+    $midi_in->set_callback_decoded(
+        sub { $midi_ch->send([ @_[0, 2], $name ]) }
+    ); # delta-time, event, midi port
     sleep;
 }
 
-sub _filter_and_forward ($self, $dt, $event) {
+sub _filter_and_forward ($self, $port, $dt, $event) {
     my $event_filters = $self->filters->{all} // [];
     push @$event_filters, @{ $self->filters->{ $event->[0] } // [] };
 
     for my $filter (@$event_filters) {
-        return if $filter->($dt, $event);
+        return if $filter->($port, $dt, $event);
     }
 
     $self->send_it($event);
