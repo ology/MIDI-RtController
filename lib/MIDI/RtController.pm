@@ -31,7 +31,7 @@ use namespace::clean;
     return $note, $note + 7, $note + 12;
   }
   sub filter_tone {
-    my ($delta_time, $event) = @_; # 2 required filter arguments
+    my ($midi_port, $delta_time, $event) = @_; # 2 required filter arguments
     my ($ev, $channel, $note, $vel) = $event->@*;
     my @notes = filter_notes($note);
     $rtc->send_it([ $ev, $channel, $_, $vel ]) for @notes;
@@ -48,8 +48,8 @@ use namespace::clean;
   $rtc->add_filter(
     'echo',
     all => sub {
-      my ($dt, $event) = @_;
-      print "dt: $dt, ev: ", join( ', ', @$event ), "\n"
+      my ($port, $dt, $event) = @_;
+      print "port: $port, delta-time: $dt, ev: ", join(', ', @$event), "\n"
         unless $event->[0] eq 'clock';
       return 0;
     }
