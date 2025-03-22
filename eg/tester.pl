@@ -118,7 +118,7 @@ sub drums ($port, $dt, $event) {
     my $part = drum_parts($note);
     my $d = MIDI::Drummer::Tiny->new(bpm => 100);
     MIDI::RtMidi::ScorePlayer->new(
-      device   => $rtc->_midi_out,
+      device   => $rtc->midi_out,
       score    => $d->score,
       common   => { drummer => $d },
       parts    => [ $part ],
