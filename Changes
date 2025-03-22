@@ -2,6 +2,7 @@ Revision history for MIDI-RtController
 
 {{$NEXT}}
     - Add the eg/dual.pl program.
+    - Make the output attribute optional.
 
 0.0501 2025-03-21 18:52:25
     - Actually document usage of this feature. Wow.
