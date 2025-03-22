@@ -61,6 +61,7 @@ use namespace::clean;
   # you can also use multiple input sources simultaneously:
   my $rtc2 = MIDI::RtController->new(
     input    => 'input device 2',
+    loop     => $rtc->loop,
     midi_out => $rtc->midi_out,
   );
   $rtc2->run;
