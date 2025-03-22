@@ -1,6 +1,7 @@
 Revision history for MIDI-RtController
 
 {{$NEXT}}
+    - Forgot to actually include eg/dual.pl. Whoopsy.
 
 0.0502 2025-03-22 00:02:28
     - Add the eg/dual.pl program.
