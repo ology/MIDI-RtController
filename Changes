@@ -1,6 +1,7 @@
 Revision history for MIDI-RtController
 
 {{$NEXT}}
+    - Fix lingering artifacts.
 
 0.0600 2025-03-22 14:33:52
     - Detect and pass the MIDI input port name to the filters.
