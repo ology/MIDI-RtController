@@ -111,8 +111,7 @@ Return the MIDI B<output> port.
 =cut
 
 has output => (
-    is       => 'ro',
-    required => 1,
+    is => 'ro',
 );
 
 =head2 loop
