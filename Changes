@@ -1,6 +1,8 @@
 Revision history for MIDI-RtController
 
 {{$NEXT}}
+
+0.0601 2025-03-22 15:58:57
     - Fix lingering artifacts.
 
 0.0600 2025-03-22 14:33:52
