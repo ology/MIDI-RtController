@@ -151,7 +151,15 @@ has _midi_channel => (
     default => sub { IO::Async::Channel->new },
 );
 
-has _midi_out => (
+=head2 midi_out
+
+  $midi_out = $rtc->midi_out;
+
+Return the B<midi_out> port.
+
+=cut
+
+has midi_out => (
     is      => 'ro',
     default => sub { RtMidiOut->new },
 );
@@ -169,7 +177,7 @@ Create a new C<MIDI::RtController> object given the above attributes.
 =cut
 
 sub BUILD {
-    my ($self) = @_;
+    my ($self, $args) = @_;
 
     my $midi_rtn = IO::Async::Routine->new(
         channels_in  => [ $self->_msg_channel ],
@@ -191,13 +199,15 @@ sub BUILD {
     my $input_name = $self->input;
     $self->_msg_channel->send(\$input_name);
 
-    $self->_midi_out->open_virtual_port('foo');
+    unless ($args->{midi_out}) {
+        $self->midi_out->open_virtual_port('foo');
 
-    _log(sprintf 'Opening %s port %s...', $self->_midi_out->{type}, $self->output)
-        if $self->verbose;
-    _open_port($self->_midi_out, $self->output);
-    _log(sprintf 'Opened %s port %s', $self->_midi_out->{type}, $self->output)
-        if $self->verbose;
+        _log(sprintf 'Opening %s port %s...', $self->midi_out->{type}, $self->output)
+            if $self->verbose;
+        _open_port($self->midi_out, $self->output);
+        _log(sprintf 'Opened %s port %s', $self->midi_out->{type}, $self->output)
+            if $self->verbose;
+    }
 }
 
 sub _log {
@@ -263,7 +273,7 @@ C<['control_change', 0, 1, 24]>, etc.
 
 sub send_it ($self, $event) {
     _log("Event: @$event") if $self->verbose;
-    $self->_midi_out->send_event(@$event);
+    $self->midi_out->send_event(@$event);
 }
 
 =head2 delay_send
