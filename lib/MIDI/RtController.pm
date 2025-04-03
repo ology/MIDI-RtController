@@ -4,7 +4,7 @@ package MIDI::RtController;
 
 use v5.36;
 
-our $VERSION = '0.0601';
+our $VERSION = '0.0602';
 
 use Moo;
 use strictures 2;
@@ -319,7 +319,7 @@ Barrett AKA fuzzix).
 
 =head1 SEE ALSO
 
-The F<eg/*.pl> example programs
+The F<eg/*.pl> example programs!
 
 L<Future::AsyncAwait>
 
