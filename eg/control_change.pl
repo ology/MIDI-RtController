@@ -13,7 +13,7 @@ my $in  = shift || 'pad'; # Synido TempoPAD Z-1
 my $out = shift || 'usb'; # USB MIDI Interface
 
 my $rtc = MIDI::RtController->new(
-    input   => $in,
+    input   => $in, # nb: input not actually used for this example, but is required by the module, nonetheless
     output  => $out,
     verbose => 1,
 );
