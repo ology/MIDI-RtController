@@ -18,8 +18,8 @@ my $rtc = MIDI::RtController->new(
 );
 
 my $it = Iterator::Breathe->new(
-    top    => 127,
     bottom => 0,
+    top    => 127,
     # step   => 4,
 );
 
