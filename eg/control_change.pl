@@ -15,6 +15,9 @@ my $in  = shift || 'pad'; # Synido TempoPAD Z-1
 # output MIDI device
 my $out = shift || 'usb'; # USB MIDI Interface
 
+my $channel = 0;
+my $control = 1;
+
 # set-up the controllers
 my $rtc = MIDI::RtController->new(
     input   => $in,
@@ -32,7 +35,7 @@ my $it = Iterator::Breathe->new(
 # send a control-change message every usleep number of microseconds
 while (1) {
     $it->iterate;
-    $rtc->send_it([ 'control_change', 0, 1, $it->i ]);
+    $rtc->send_it([ 'control_change', $channel, $control, $it->i ]);
     usleep 250_000; # 1_000_000 microseconds = 1 second
 }
 
