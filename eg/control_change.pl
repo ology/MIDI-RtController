@@ -10,7 +10,7 @@ use Iterator::Breathe ();
 use Time::HiRes qw(usleep);
 
 # nb: The input device is not actually used for this example,
-#but is required by the module, nonetheless.
+# but is required by the module, nonetheless.
 my $in  = shift || 'pad'; # Synido TempoPAD Z-1
 # output MIDI device
 my $out = shift || 'usb'; # USB MIDI Interface
