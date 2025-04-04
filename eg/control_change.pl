@@ -29,7 +29,7 @@ my $it = Iterator::Breathe->new(
     # step   => 4,
 );
 
-# sent a control-change message every usleep number of microseconds
+# send a control-change message every usleep number of microseconds
 while (1) {
     $it->iterate;
     $rtc->send_it([ 'control_change', 0, 1, $it->i ]);
