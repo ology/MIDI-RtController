@@ -7,6 +7,7 @@ use warnings;
 
 use MIDI::RtController ();
 use Iterator::Breathe ();
+use Time::HiRes qw(usleep);
 
 my $in  = shift || 'pad'; # Synido TempoPAD Z-1
 my $out = shift || 'usb'; # USB MIDI Interface
@@ -26,7 +27,7 @@ my $it = Iterator::Breathe->new(
 while (1) {
     $it->iterate;
     $rtc->send_it([ 'control_change', 0, 1, $it->i ]);
-    sleep 1;
+    usleep 250_000; # 1_000_000 microseconds = 1 second
 }
 
 $rtc->run;
