@@ -9,7 +9,6 @@ our $VERSION = '0.0602';
 use Moo;
 use strictures 2;
 use Carp qw(croak);
-use Future::AsyncAwait;
 use IO::Async::Channel ();
 use IO::Async::Loop ();
 use IO::Async::Routine ();
