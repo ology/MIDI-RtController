@@ -8,7 +8,7 @@ use v5.36;
 use MIDI::RtController ();
 
 my $input_names = shift || 'joystick,tempopad'; # midi controller devices
-my $output_name = shift || 'fluid';    # fluidsynth output
+my $output_name = shift || 'usb'; # usb interface output
 
 my $inputs = [ split /,/, $input_names ];
 
