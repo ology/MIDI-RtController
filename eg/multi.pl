@@ -1,8 +1,5 @@
 #!/usr/bin/env perl
 
-# fluidsynth -a coreaudio -m coremidi -g 2.0 ~/Music/FluidR3_GM.sf2
-# perl eg/multi.pl
-
 use v5.36;
 
 use MIDI::RtController ();
