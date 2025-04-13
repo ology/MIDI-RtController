@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 # fluidsynth -a coreaudio -m coremidi -g 2.0 ~/Music/FluidR3_GM.sf2
-# PERL_FUTURE_DEBUG=1 perl rtmidi-dual.pl
+# perl eg/multi.pl
 
 use v5.36;
 
