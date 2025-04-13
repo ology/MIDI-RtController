@@ -8,7 +8,7 @@ use v5.36;
 use MIDI::RtController ();
 
 my $input_names = shift || 'keyboard,pad,joystick'; # midi controller devices
-my $output_name = shift || 'usb'; # usb interface output
+my $output_name = shift || 'usb'; # midi output
 
 my $inputs = [ split /,/, $input_names ];
 
