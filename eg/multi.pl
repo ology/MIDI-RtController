@@ -1,7 +1,5 @@
 #!/usr/bin/env perl
 
-use v5.36;
-
 use MIDI::RtController ();
 
 my $input_names = shift || 'keyboard,pad,joystick'; # midi controller devices
