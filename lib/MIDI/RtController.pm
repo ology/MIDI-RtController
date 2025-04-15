@@ -308,6 +308,37 @@ sub run ($self) {
     $self->loop->run;
 }
 
+=head1 UTILITIES
+
+=head2 open_controllers
+
+  $controllers = $control->open_controllers($inputs, $output);
+
+Return a hash reference of C<MIDI::RtController> instances, keyed by
+a comma-separated string of MIDI input controller device names.
+
+=cut
+
+sub open_controllers ($inputs, $output) {
+    my %controllers;
+    my @inputs = split /,/, $inputs;
+    my $name = $inputs[0];
+    my $control = __PACKAGE__->new(
+        input   => $name,
+        output  => $output,
+    );
+    $controllers{$name} = $control;
+    for my $i (@inputs[1 .. $#inputs]) {
+        $controllers{$i} = __PACKAGE__->new(
+            input    => $i,
+            loop     => $control->loop,
+            midi_out => $control->midi_out,
+            verbose  => 1,
+        );
+    }
+    return \%controllers;
+}
+
 1;
 __END__
 
