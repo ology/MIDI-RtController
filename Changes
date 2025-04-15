@@ -1,6 +1,7 @@
 Revision history for MIDI-RtController
 
 {{$NEXT}}
+    - Fix documentation.
 
 0.0700 2025-04-15 01:09:46
     - Add the open_controllers() utility function.
