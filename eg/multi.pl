@@ -5,21 +5,10 @@ use MIDI::RtController ();
 my $input_names = shift || 'keyboard,pad,joystick'; # midi controller devices
 my $output_name = shift || 'usb'; # midi output
 
-my $inputs = [ split /,/, $input_names ];
+my $verbose = 1;
 
-my $control = MIDI::RtController->new(
-    input   => $inputs->[0],
-    output  => $output_name,
-    verbose => 1,
-);
+my @inputs = split /,/, $input_names;
 
-for my $name (@$inputs[1 .. $#$inputs]) {
-    MIDI::RtController->new(
-        input    => $name,
-        loop     => $control->loop,
-        midi_out => $control->midi_out,
-        verbose  => 1,
-    );
-}
+my $controllers = MIDI::RtController::open_controllers($input_names, $output_name, $verbose);
 
-$control->run;
+$controllers->{ $inputs[0] }->run;
