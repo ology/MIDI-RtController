@@ -313,12 +313,12 @@ sub run ($self) {
 =head2 open_controllers
 
   $controllers = MIDI::RtController::open_controllers(
-    $input_names, $output_name, $verbose
+    \@inputs, $output_name, $verbose
   );
 
 Return a hash reference of C<MIDI::RtController> instances, keyed by
-each input (given by a comma-separated string of MIDI B<input_names>
-controller devices).
+each input (given by an array reference of MIDI controller device
+names).
 
 The B<output_name> is used for the MIDI output device for each
 instance. The B<verbose> Boolean flag is passed to the instances.
@@ -327,15 +327,14 @@ instance. The B<verbose> Boolean flag is passed to the instances.
 
 sub open_controllers ($inputs, $output, $verbose) {
     my %controllers;
-    my @inputs = split /,/, $inputs;
-    my $name = $inputs[0];
+    my $name = $inputs->[0];
     my $control = __PACKAGE__->new(
         input   => $name,
         output  => $output,
         verbose => $verbose,
     );
     $controllers{$name} = $control;
-    for my $i (@inputs[1 .. $#inputs]) {
+    for my $i (@$inputs[1 .. $#$inputs]) {
         $controllers{$i} = __PACKAGE__->new(
             input    => $i,
             loop     => $control->loop,
