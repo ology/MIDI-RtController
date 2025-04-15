@@ -319,13 +319,14 @@ a comma-separated string of MIDI input controller device names.
 
 =cut
 
-sub open_controllers ($inputs, $output) {
+sub open_controllers ($inputs, $output, $verbose) {
     my %controllers;
     my @inputs = split /,/, $inputs;
     my $name = $inputs[0];
     my $control = __PACKAGE__->new(
         input   => $name,
         output  => $output,
+        verbose => $verbose,
     );
     $controllers{$name} = $control;
     for my $i (@inputs[1 .. $#inputs]) {
