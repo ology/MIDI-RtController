@@ -318,10 +318,11 @@ sub run ($self) {
 
 Return a hash reference of C<MIDI::RtController> instances, keyed by
 each input (given by an array reference of MIDI controller device
-names).
+names like C<[keyboard,pad,joystick]>).
 
-The B<output_name> is used for the MIDI output device for each
-instance. The B<verbose> Boolean flag is passed to the instances.
+The B<output_name> (e.g. C<usb>) is used for the MIDI output device
+for each instance. The B<verbose> Boolean flag is passed to the
+instances.
 
 =cut
 
