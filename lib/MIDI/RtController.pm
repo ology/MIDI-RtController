@@ -312,10 +312,16 @@ sub run ($self) {
 
 =head2 open_controllers
 
-  $controllers = $control->open_controllers($inputs, $output);
+  $controllers = MIDI::RtController::open_controllers(
+    $input_names, $output_name, $verbose
+  );
 
 Return a hash reference of C<MIDI::RtController> instances, keyed by
-a comma-separated string of MIDI input controller device names.
+each input (given by a comma-separated string of MIDI B<input_names>
+controller devices).
+
+The B<output_name> is used for the MIDI output device for each
+instance. The B<verbose> Boolean flag is passed to the instances.
 
 =cut
 
