@@ -358,6 +358,12 @@ Barrett AKA fuzzix).
 
 The F<eg/*.pl> example programs!
 
+L<MIDI::RtController::Filter::Tonal> - Related module
+
+L<MIDI::RtController::Filter::Math> - Related module
+
+L<MIDI::RtController::Filter::Drums> - Related module
+
 L<Future::AsyncAwait>
 
 L<IO::Async::Channel>
