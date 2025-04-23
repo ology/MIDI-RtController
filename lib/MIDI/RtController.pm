@@ -199,7 +199,7 @@ sub BUILD {
     $self->_msg_channel->send(\$input_name);
 
     unless ($args->{midi_out}) {
-        $self->midi_out->open_virtual_port('foo');
+        $self->midi_out->open_virtual_port('RtController');
 
         _log(sprintf 'Opening %s port %s...', $self->midi_out->{type}, $self->output)
             if $self->verbose;
