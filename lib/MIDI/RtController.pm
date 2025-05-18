@@ -22,7 +22,7 @@ use namespace::clean;
   > perl -MMIDI::RtController -E \
     '$rtc = MIDI::RtController->new(input=>shift, output=>shift); $rtc->run' \
     keyboard usb
-  # ...ctrl-c to exit
+  # now play the keyboard... ctrl-c to exit
 
   # Filter with a program:
   use MIDI::RtController ();
