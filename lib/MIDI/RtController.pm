@@ -22,6 +22,7 @@ use namespace::clean;
   > perl -MMIDI::RtController -E \
     '$c = MIDI::RtController->new(input => shift, output => shift); $c->run' \
     keyboard usb
+  # ...ctrl-c to exit
 
   # in a program:
   use MIDI::RtController ();
