@@ -20,7 +20,7 @@ use namespace::clean;
 
   # Control via command line:
   > perl -MMIDI::RtController -E \
-    '$c = MIDI::RtController->new(input=>shift, output=>shift); $c->run' \
+    '$rtc = MIDI::RtController->new(input=>shift, output=>shift); $rtc->run' \
     keyboard usb
   # ...ctrl-c to exit
 
