@@ -18,13 +18,13 @@ use namespace::clean;
 
 =head1 SYNOPSIS
 
-  # on the command line:
+  # Control via command line:
   > perl -MMIDI::RtController -E \
     '$c = MIDI::RtController->new(input => shift, output => shift); $c->run' \
     keyboard usb
   # ...ctrl-c to exit
 
-  # in a program:
+  # Filter with a program:
   use MIDI::RtController ();
 
   my $rtc = MIDI::RtController->new(
