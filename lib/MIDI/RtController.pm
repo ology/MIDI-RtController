@@ -19,9 +19,9 @@ use namespace::clean;
 =head1 SYNOPSIS
 
   # Control via command line:
-  > perl -MMIDI::RtController -E \
-    '$rtc = MIDI::RtController->new(input=>shift, output=>shift); $rtc->run' \
-    keyboard usb
+  # > perl -MMIDI::RtController -E \
+  #   '$rtc = MIDI::RtController->new(input=>shift, output=>shift); $rtc->run' \
+  #   keyboard usb
   # now play the keyboard... ctrl-c to exit
 
   # Filter with a program:
