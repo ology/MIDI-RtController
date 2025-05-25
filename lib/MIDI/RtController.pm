@@ -230,7 +230,12 @@ sub _rtmidi_loop ($msg_ch, $midi_ch) {
     my $midi_in = MIDI::RtMidi::FFI::Device->new(type => 'in');
     my $name = _open_port($midi_in, ${ $msg_ch->recv });
     $midi_in->set_callback_decoded(
-        sub { $midi_ch->send([ @_[0, 2], $name ]) }
+        sub {
+            my (@event) = @_;
+            my @e = $event[0] eq 'clock' || $event[0] eq 'start' || $event[0] eq 'stop'
+                ? ($event[0], 0) : @event[0, 2];
+            $midi_ch->send([ @e, $name ])
+        }
     ); # delta-time, event, midi port
     sleep;
 }
