@@ -15,3 +15,8 @@ my $controller = MIDI::RtController->new(
 
 # set the controls for the heart of the sun
 $controller->run;
+
+__END__
+> perl -MMIDI::RtController -E \
+  '$c = MIDI::RtController->new(input=>shift, output=>shift, verbose=>1); $c->run' \
+  keyboard usb
