@@ -1,6 +1,7 @@
 Revision history for MIDI-RtController
 
 {{$NEXT}}
+    - Improve documentation.
 
 0.0801 2025-06-05 18:29:44
     - Fix eg/* file naming.
