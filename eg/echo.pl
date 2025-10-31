@@ -1,4 +1,7 @@
 #!/usr/bin/env perl
+
+# Monitor the MIDI messages of the given port.
+
 use strict;
 use warnings;
 use MIDI::RtController;
