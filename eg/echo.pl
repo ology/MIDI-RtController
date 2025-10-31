@@ -1,11 +1,9 @@
 #!/usr/bin/env perl
-
 use strict;
 use warnings;
-
 use MIDI::RtController;
 
-my $in  = $ARGV[0] || die "Usage: perl $0 midi-in-port";
+my $in = $ARGV[0] || die "Usage: perl $0 midi-in-port";
 
 my $rtc = MIDI::RtController->new( input => $in, output => $in );
 
