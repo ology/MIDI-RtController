@@ -207,11 +207,13 @@ sub BUILD {
 
     unless ($args->{midi_out}) {
         $self->midi_out->open_virtual_port('RtController');
+        # use Data::Dumper::Compact 'ddc';
+        # print ddc $self->midi_out;
 
-        _log(sprintf 'Opening %s port %s...', $self->midi_out->{type}, $self->output)
+        _log(sprintf 'Opening out port %s...', $self->output)
             if $self->verbose;
         _open_port($self->midi_out, $self->output);
-        _log(sprintf 'Opened %s port %s', $self->midi_out->{type}, $self->output)
+        _log(sprintf 'Opened out port %s', $self->output)
             if $self->verbose;
     }
 }
