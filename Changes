@@ -1,6 +1,7 @@
 Revision history for MIDI-RtController
 
 {{$NEXT}}
+    - Update for RtMidi FFI.
 
 0.0802 2025-10-19 16:08:21
     - Improve documentation.
