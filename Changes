@@ -1,6 +1,7 @@
 Revision history for MIDI-RtController
 
 {{$NEXT}}
+    - Fix use version requirements.
 
 0.0804 2026-06-03 17:31:05
     - Add the eg/simple.pl example program.
