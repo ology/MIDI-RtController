@@ -169,6 +169,10 @@ has midi_out => (
     default => sub { RtMidiOut->new },
 );
 
+has _midi_routine => (
+    is => 'rw',
+);
+
 =head1 METHODS
 
 =head2 new
@@ -192,6 +196,7 @@ sub BUILD {
         func         => '_rtmidi_loop',
     );
     $self->loop->add($midi_rtn);
+    $self->_midi_routine($midi_rtn);
     $self->_midi_channel->configure(
         on_recv => sub ($channel, $event) {
             my $dt   = shift @$event;
@@ -322,6 +327,25 @@ Run the asynchronous B<loop>!
 
 sub run ($self) {
     $self->loop->run;
+}
+
+=head2 stop
+
+  $rtc->stop;
+
+Stop this controller's internal MIDI-input worker process and remove
+it from the B<loop>. Call this before discarding a controller. Just
+letting it go out of scope does not terminate the worker, since it
+runs in a separate spawned process that isn't tied to Perl's garbage
+collection.
+
+=cut
+
+sub stop ($self) {
+    my $rtn = $self->_midi_routine or return;
+    $rtn->kill('TERM') if $rtn->is_running;
+    $self->loop->remove($rtn);
+    $self->_midi_routine(undef);
 }
 
 =head1 UTILITIES
