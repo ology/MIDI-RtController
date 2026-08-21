@@ -4,7 +4,7 @@ package MIDI::RtController;
 
 use v5.36;
 
-our $VERSION = '0.0805';
+our $VERSION = '0.0806';
 
 use Moo;
 use strictures 2;
@@ -343,7 +343,7 @@ collection.
 
 sub stop ($self) {
     my $rtn = $self->_midi_routine or return;
-    $rtn->kill('TERM') if $rtn->is_running;
+    $rtn->kill('TERM');
     $self->loop->remove($rtn);
     $self->_midi_routine(undef);
 }
