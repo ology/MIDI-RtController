@@ -1,6 +1,7 @@
 Revision history for MIDI-RtController
 
 {{$NEXT}}
+    - Close the midi_output port in stop().
 
 0.0806 2026-08-20 18:21:46
     - Oops. ->is_running is not a thing.
