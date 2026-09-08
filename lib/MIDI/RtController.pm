@@ -173,6 +173,19 @@ has _midi_routine => (
     is => 'rw',
 );
 
+=head2 silent
+
+  $silent = $rtc->silent;
+
+Don't send an event to the midi out port.
+
+=cut
+
+has silent => (
+    is      => 'ro',
+    default => 0,
+);
+
 =head1 METHODS
 
 =head2 new
@@ -255,7 +268,7 @@ sub _filter_and_forward ($self, $port, $dt, $event) {
         return if $filter->($port, $dt, $event);
     }
 
-    $self->send_it($event);
+    $self->send_it($event) unless $self->silent;
 }
 
 =head2 add_filter
